@@ -35,7 +35,8 @@ The major tools used in this learning process are:
 14. [Optimization and Constraints](#-optimization-and-constraints)
 15. [Example Verilog Codes](#-example-verilog-codes)
 16. [Overall Learning](#-overall-learning)
-17. [Summary](#-summary)
+17. [synthesis_waveforms](#-synthesis_waveforms)
+18. [Summary](#-summary)
 
 ---
 
@@ -665,6 +666,13 @@ end
 
 endmodule
 ```
+# Synthesis_Waveforms
+<img width="954" height="359" alt="Screenshot 2026-08-09 021245 - Copy"
+src="https://github.com/user-attachments/assets/2479a890-dea2-4918-811e-46afa593e74d" />
+<img width="956" height="1003" alt="Screenshot 2026-08-09 022809" src="https://github.com/user-attachments/assets/ec940e2b-b6d5-4123-ae58-d89e25a1e2a5" />
+<img width="952" height="1011" alt="Screenshot 2026-08-09 023753" src="https://github.com/user-attachments/assets/0003029c-a0cb-4187-b6a6-e64de679b1d8" />
+
+
 ## 📈 Levels of Concepts Understood
 
 The learning progressed through multiple levels:
@@ -807,3 +815,6 @@ Timing / Power / Area Optimization
 The combination of Verilog, Icarus Verilog, GTKWave and Yosys provides a practical environment for understanding how digital hardware is designed, verified and synthesized.
 
 This repository documents my progression from basic RTL concepts to a better understanding of VLSI design, synthesis, timing and standard-cell implementation.
+
+
+
