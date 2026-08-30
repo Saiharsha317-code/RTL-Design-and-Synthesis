@@ -1,6 +1,6 @@
 # VSDIAT Co-Training – Baby SoC Design and Verification
 
-Documentation of a two-day **VSDIAT co-training program** conducted at **Anurag University** for EC/EEE third-year students, covering the design and verification flow of the **VSDBabySoC** architecture — from specification through RTL, functional simulation, synthesis, and gate-level simulation (GLS).
+Documentation  covering the design and verification flow of the **VSDBabySoC** architecture — from specification through RTL, functional simulation, synthesis, and gate-level simulation (GLS).
 
 This repository documents what was actually performed during the training: the tools used, the commands run, the waveforms observed, the problems encountered during GLS, and how they were debugged and resolved.
 
@@ -21,10 +21,9 @@ This repository documents what was actually performed during the training: the t
 9. [Stage 6 – Gate-Level Simulation (GLS)](#stage-6--gate-level-simulation-gls)
 10. [Stage 7 – GLS Problem and Debugging](#stage-7--gls-problem-and-debugging)
 11. [Stage 8 – RTL vs GLS Comparison](#stage-8--rtl-vs-gls-comparison)
-12. [Scripts](#scripts)
-13. [Current Status](#current-status)
-14. [Repository Structure](#repository-structure)
-15. [Conclusion](#conclusion)
+12. [Current Status](#current-status)
+13. [Repository Structure](#repository-structure)
+14. [Conclusion](#conclusion)
 
 ---
 
@@ -82,7 +81,8 @@ git clone https://github.com/Subhasis-Sahu/BabySoC_Simulation
 cd BabySoC_Simulation
 ```
 
-![Git clone setup](01-git-and-libraries/git-clone-setup.png)
+![Git clone setup]<img width="1260" height="197" alt="Screenshot 2026-08-30 220929" src="https://github.com/user-attachments/assets/f9049929-a856-44b9-8e33-1dd28d5b842c" />
+
 
 This repository contains the BabySoC RTL sources (`src/module/`), include files (`src/include/`), and the Sky130/analog IP liberty and Verilog models (`src/lib/`) used in later synthesis and GLS stages.
 
@@ -90,7 +90,8 @@ This repository contains the BabySoC RTL sources (`src/module/`), include files 
 
 Before RTL work began, we reviewed the VSDBabySoC architecture diagram to understand the design's structure:
 
-![VSDBabySoC architecture](02-specifications/vsdbabysoc-architecture.png)
+![VSDBabySoC architecture]<img width="2270" height="1260" alt="babysoc_archi" src="https://github.com/user-attachments/assets/3953c278-8345-45d9-bd24-3275b0c72401" />
+
 
 Key points identified from the specification:
 
@@ -103,7 +104,8 @@ Key points identified from the specification:
 
 The RTL/testbench source (`testbench.v`) defines the `rvmyth` module interface and conditionally includes either the pre-synthesis or post-synthesis sources depending on which simulation is being run:
 
-![Testbench and rvmyth includes](03-rtl-design/testbench-and-rvmyth-includes.png)
+![Testbench and rvmyth includes]<img width="1920" height="983" alt="testbench-and-rvmyth-includes" src="https://github.com/user-attachments/assets/ee83b481-be73-415b-95eb-59d709c5e73f" />
+
 
 - **`PRE_SYNTH_SIM`** path includes: `vsdbabysoc.v`, `avsddac.v`, `avsdpll.v`, `rvmyth.v`, `clk_gate.v`
 - **`POST_SYNTH_SIM`** path includes: `baby_soc_netlist2.v` (the final synthesized netlist), `avsddac.v`, `avsdpll.v`, `primitives.v`, `sky130_fd_sc_hd.v`
@@ -120,11 +122,13 @@ iverilog -o ./pre_synth_sim.out -DPRE_SYNTH_SIM src/module/testbench.v -I src/in
 gtkwave pre_synth_sim.vcd
 ```
 
-![Pre-synthesis simulation terminal](04-functional-simulation/pre-synth-sim-terminal.png)
+![Pre-synthesis simulation terminal]<img width="1920" height="983" alt="pre-synth-sim-terminal" src="https://github.com/user-attachments/assets/478bd209-bbc2-4175-b953-bc60b69d88c8" />
+
 
 This simulation completed successfully (`$finish called at 84999000 (1ps)`), producing `pre_synth_sim.vcd`. This waveform — showing the `RV_TO_DAC[9:0]` bus toggling over time — established the **reference/expected behavior** that the gate-level simulation was later compared against.
 
-Runnable script: [`scripts/run_functional_sim.sh`](scripts/run_functional_sim.sh)
+Waveform:<img width="1920" height="983" alt="day3_gls_simulation_withoutanychanges" src="https://github.com/user-attachments/assets/b0d6b2b8-a33e-4102-949f-35051fe1294a" />
+
 
 ## Stage 5 – Synthesis
 
@@ -152,26 +156,33 @@ write_verilog -noattr baby_soc_netlist2.v
 stat
 ```
 
-![Yosys synthesis and post-synth-sim commands](05-synthesis/yosys-synthesis-and-post-synth-sim-commands.png)
+![Yosys synthesis and post-synth-sim commands]<img width="1024" height="1536" alt="ChatGPT Image Aug 30, 2026, 10_32_16 PM" src="https://github.com/user-attachments/assets/155e031c-e219-4ed4-8cfb-838a5ba00d00" />
+
 
 Three netlists are written out at different points in the flow: `baby_soc_netlist.v` (right after technology mapping via `abc`), `baby_soc_netlist1.v` (after `flatten`), and the final `baby_soc_netlist2.v` (after `setundef`/`clean`/`rename`) — which is the netlist actually referenced by the `POST_SYNTH_SIM` branch of `testbench.v` (Stage 3) and used for Gate-Level Simulation.
 
 ABC mapped the design onto Sky130 `sky130_fd_sc_hd` standard cells (AND/OR/NAND/NOR/MUX/XOR/flip-flop cells, etc.):
 
-![ABC mapping results 1](05-synthesis/abc-mapping-results-1.png)
-![ABC mapping results 2](05-synthesis/abc-mapping-results-2.png)
+![ABC mapping results 1]<img width="1920" height="983" alt="abc-mapping-results-1" src="https://github.com/user-attachments/assets/e325e3a6-a9dd-45cf-8e6f-90e69fe7b0e4" />
+
+![ABC mapping results 2]<img width="1920" height="983" alt="abc-mapping-results-2" src="https://github.com/user-attachments/assets/8dfcd2b2-0fed-417d-b901-0f51c6addf80" />
+
 
 `stat` on the synthesized `vsdbabysoc` top module and the `rvmyth`/`clk_gate` sub-hierarchy confirmed the gate-level cell counts (thousands of `sky130_fd_sc_hd_*` cells, plus `avsdpll` and `avsddac` black-box instances):
 
-![Hierarchy pass stat](05-synthesis/hierarchy-pass-stat.png)
-![Post-synth stat 1](05-synthesis/post-synth-stat-1.png)
-![Post-synth stat 2](05-synthesis/post-synth-stat-2.png)
+![Hierarchy pass stat]<img width="1920" height="983" alt="hierarchy-pass-stat" src="https://github.com/user-attachments/assets/882751fc-c43b-4e30-97ec-cd196b67d2bc" />
+
+![Post-synth stat 1]<img width="1920" height="983" alt="post-synth-stat-1" src="https://github.com/user-attachments/assets/cbd69a0a-cdc9-4037-a93d-7709b80286f0" />
+
+![Post-synth stat 2]<img width="1920" height="983" alt="post-synth-stat-2" src="https://github.com/user-attachments/assets/aa29ce12-dc80-4484-b92b-a1af6a920119" />
+
 
 A full schematic view of the synthesized design was also generated via `show`:
 
-![Full chip schematic](05-synthesis/full-chip-schematic-dot-viewer.png)
+![Full chip schematic]<img width="1920" height="983" alt="full-chip-schematic-dot-viewer" src="https://github.com/user-attachments/assets/24325f32-02ab-4de3-ad2d-6b372d728a9c" />
 
-Runnable script: [`scripts/synth.ys`](scripts/synth.ys)
+
+
 
 ## Stage 6 – Gate-Level Simulation (GLS)
 
@@ -188,13 +199,16 @@ This used the `sky130_fd_sc_hd.v` behavioral/functional Verilog models under `sr
 
 `stat` output on the design confirmed the cell counts carried through from synthesis:
 
-![Stat vsdbabysoc cells](06-gate-level-simulation/stat-vsdbabysoc-cells.png)
+![Stat vsdbabysoc cells]<img width="1920" height="983" alt="stat-vsdbabysoc-cells" src="https://github.com/user-attachments/assets/ca6bf643-6aad-4d0b-a8f6-df582e5658cc" />
+
 
 Yosys's `check` pass on the final netlist reported **0 problems**, confirming a structurally clean synthesized design:
 
-![Check pass 0 problems](06-gate-level-simulation/stat-check-pass-0-problems.png)
+![Check pass 0 problems]<img width="1920" height="983" alt="stat-check-pass-0-problems" src="https://github.com/user-attachments/assets/281306d4-45b4-4e99-a3c9-cb8a2701cba3" />
 
-Runnable script: [`scripts/run_post_synth_sim.sh`](scripts/run_post_synth_sim.sh)
+Waveform: <img width="1920" height="983" alt="VirtualBox_vsdworkshop1_30_08_2026_23_04_47" src="https://github.com/user-attachments/assets/1a6514d0-1011-4548-b1d9-d75b2963449a" />
+
+
 
 ## Stage 7 – GLS Problem and Debugging
 
@@ -202,7 +216,8 @@ Runnable script: [`scripts/run_post_synth_sim.sh`](scripts/run_post_synth_sim.sh
 
 **What was observed:** in an early GLS run, several signals (`ENb_CP`, `VREFH`, and portions of the `RV_TO_DAC` bus) came up flat/constant instead of toggling as expected:
 
-![GLS waveform issue](07-gls-debugging/gls-waveform-issue.png)
+![GLS waveform issue]<img width="1362" height="362" alt="Screenshot 2026-08-30 224308" src="https://github.com/user-attachments/assets/f68f0385-6446-4c12-b57d-c31699b85a5f" />
+
 
 This was treated as a real problem, not a cosmetic difference — it meant the gate-level simulation was not yet reproducing the reference behavior seen at RTL. Two approaches were investigated.
 
@@ -225,7 +240,8 @@ I give up.
 
 Line 74452 of that file is an `` `endif `` preprocessor directive followed by a trailing macro name (`` `endif SKY130_FD_SC_HD__LPFLOW_BLEEDER_FUNCTIONAL_V ``), inside the `sky130_fd_sc_hd__lpflow_bleeder` cell model:
 
-![Sky130 line 74452](07-gls-debugging/sky130-library-approach/sky130_fd_sc_hd-line-74452.png)
+![Sky130 line 74452]<img width="1920" height="983" alt="sky130_fd_sc_hd-line-74452" src="https://github.com/user-attachments/assets/af0d18b6-e035-4238-812a-1b1636bc0a43" />
+
 
 Subsequent attempts to run `vvp` directly on the wrong file also failed:
 
@@ -249,7 +265,8 @@ ls -la post_synth_sim.vcd
 gtkwave post_synth_sim.vcd
 ```
 
-![VVP approach terminal sequence](07-gls-debugging/vvp-approach/terminal-debug-sequence.png)
+![VVP approach terminal sequence]<img width="1920" height="983" alt="VirtualBox_vsdworkshop1_30_08_2026_22_52_03" src="https://github.com/user-attachments/assets/3b931ce6-145c-46ac-8e29-3f23d4cd3166" />
+
 
 This produced a clean run (`$finish called at 84999000 (1ps)`) and a valid `post_synth_sim.vcd`, which was then opened in GTKWave for comparison against the functional simulation (Stage 8).
 
@@ -257,19 +274,10 @@ This produced a clean run (`$finish called at 84999000 (1ps)`) and a valid `post
 
 With a valid post-synthesis waveform in hand, the pre-synthesis (`pre_synth_sim.vcd`) and post-synthesis (`post_synth_sim.vcd`) waveforms were opened side by side in GTKWave for direct comparison of the `RV_TO_DAC[9:0]` bus:
 
-![Pre vs post synth waveform comparison](08-rtl-vs-gls-comparison/pre-vs-post-synth-waveform-comparison.png)
+![Pre vs post synth waveform comparison]<img width="1920" height="983" alt="pre-vs-post-synth-waveform-comparison" src="https://github.com/user-attachments/assets/537c8eb5-8437-4b49-8665-6116c6170205" />
+
 
 **Result:** both simulations produced the same output — the GLS waveform matched the functional simulation waveform over the full run (0–~85 μs). This confirms the synthesized gate-level implementation is functionally correct.
-
----
-
-## Scripts
-
-Runnable versions of the commands documented above are in [`scripts/`](scripts/):
-
-- [`scripts/synth.ys`](scripts/synth.ys) — Yosys synthesis script (Stage 5)
-- [`scripts/run_functional_sim.sh`](scripts/run_functional_sim.sh) — pre-synthesis functional simulation (Stage 4)
-- [`scripts/run_post_synth_sim.sh`](scripts/run_post_synth_sim.sh) — gate-level simulation, using the corrected project-local library paths (Stage 6)
 
 ---
 
@@ -310,12 +318,8 @@ baby-soc-vsdiat-cotraining/
 ├── 05-synthesis/
 ├── 06-gate-level-simulation/
 ├── 07-gls-debugging/
-│   ├── sky130-library-approach/
-│   └── vvp-approach/
 ├── 08-rtl-vs-gls-comparison/
-│
-├── screenshots/     # flat mirror of all screenshots used above
-└── scripts/         # runnable synth.ys / run_functional_sim.sh / run_post_synth_sim.sh
+
 ```
 
 ---
