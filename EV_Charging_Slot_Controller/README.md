@@ -92,7 +92,6 @@ The implementation flow is presented in the order below. The repository contains
 ```text
 EV-Charging-Slot-Controller/
 ├── README.md
-├── .gitignore
 ├── 01_RTL_Design/
 │   ├── README.md
 │   └── ev_charging_controller.v
@@ -103,21 +102,13 @@ EV-Charging-Slot-Controller/
 │   ├── README.md
 │   ├── mapped_ev_charging_controller.v
 │   ├── synth.log
-│   ├── full_timing_report.log
 │   ├── check_25ns.tcl
 │   ├── run_full_sta.tcl
 │   ├── run_multicorner_sta.tcl
 │   ├── render_layout.tcl
-│   ├── ev_charging_controller.mag
 │   ├── openlane/
-│   ├── results/
-│   └── timing_multicorner/
 └── 04_Evidence/
-    ├── README.md
-    ├── 01_RTL_and_Verification/
-    ├── 02_Synthesis/
-    ├── 03_Physical_Design/
-    └── 04_Timing_Analysis/
+    └── README.md
 ```
 
 ## 6. Run RTL simulation and view GTKWave
