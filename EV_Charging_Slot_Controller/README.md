@@ -68,26 +68,8 @@ The intended behavior includes occupancy tracking, availability calculation, res
 ## 4. RTL-to-GDSII workflow
 
 The implementation flow is presented in the order below. The repository contains source, reports, and screenshots for the relevant milestones; the precise command sequence can vary with installed tool versions and the selected OpenLane version.
+<img width="1086" height="727" alt="image" src="https://github.com/user-attachments/assets/4648a75f-a157-4b50-ba0f-f216a58eeaf5" />
 
-```mermaid
-flowchart TD
-    A[Problem statement and requirements] --> B[RTL design: Verilog]
-    B --> C[RTL compile and functional simulation]
-    C --> D[GTKWave: inspect RTL waveform]
-    D --> E[Yosys synthesis and optimization]
-    E --> F[Sky130 HD standard-cell mapping]
-    F --> G[Gate-level simulation: mapped netlist + cell models]
-    G --> H[GLS waveform inspection]
-    H --> I[OpenLane physical-design flow]
-    I --> J[Floorplanning and power planning]
-    J --> K[Global placement and detailed placement]
-    K --> L[Clock-tree synthesis (CTS)]
-    L --> M[Global and detailed routing]
-    M --> N[Parasitic extraction: SPEF]
-    N --> O[Static timing analysis: setup and hold]
-    O --> P[DRC/LVS and other available checks]
-    P --> Q[GDSII export and layout inspection]
-```
 
 ### Stage-by-stage explanation
 
